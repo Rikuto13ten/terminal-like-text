@@ -5,12 +5,15 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -40,11 +43,11 @@ fun TextArea(
     modifier: Modifier = Modifier
 ) {
     val textState = remember { mutableStateOf("") }
-    var text by remember { mutableStateOf("Perfect.") }
+    var text by remember { mutableStateOf("terminal like.") }
     var showText by remember { mutableStateOf(false) }
-    var delayTime by remember { mutableLongStateOf(20) }
-    var textSize by remember { mutableIntStateOf(14) }
-    var temporaryTextSize by remember { mutableIntStateOf(14) }
+    var delayTime by remember { mutableLongStateOf(200) }
+    var textSize by remember { mutableIntStateOf(40) }
+    var temporaryTextSize by remember { mutableIntStateOf(40) }
 
     LaunchedEffect(key1 = showText) {
         text.forEach { char ->
@@ -62,48 +65,72 @@ fun TextArea(
             .padding(8.dp)
     ) {
 
-        Text(
-            text = "テキスト",
-            color = Color.White
-        )
-        TextField(
-            value = text,
-            onValueChange = {
-                text = it
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(
-            text = "秒数 ms",
-            color = Color.White
-        )
-        IntTextField(
-            value = delayTime.toInt(),
-            onValueChange = {
-                delayTime = it.toLong()
-            }
-        )
-
-        Text(
-            text = "フォントサイズ",
-            color = Color.White
-        )
-        IntTextField(
-            value = temporaryTextSize,
-            onValueChange = {
-                temporaryTextSize = it
-            }
-        )
-
-        Button(onClick = {
-            textState.value = ""
-            showText = !showText
-            textSize = temporaryTextSize
-        }) {
-            Text(
-                text = "push",
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            TextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
             )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .height(50.dp),
+                shape = RoundedCornerShape(8.dp),
+                onClick = {
+                    textState.value = ""
+                    showText = !showText
+                    textSize = temporaryTextSize
+                }
+            ) {
+                Text(
+                    text = "push",
+                )
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.weight(0.5f)
+            ) {
+                Text(
+                    text = "秒数 ms",
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.dotgothic16))
+                )
+                IntTextField(
+                    modifier = Modifier.height(50.dp),
+                    value = delayTime.toInt(),
+                    onValueChange = {
+                        delayTime = it.toLong()
+                    }
+                )
+            }
+
+            Column(
+                modifier = Modifier.weight(0.5f)
+            ) {
+                Text(
+                    text = "フォントサイズ",
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.dotgothic16))
+                )
+                IntTextField(
+                    modifier = Modifier.height(50.dp),
+                    value = temporaryTextSize,
+                    onValueChange = {
+                        temporaryTextSize = it.toInt()
+                    }
+                )
+            }
         }
 
         AnimatedVisibility(
@@ -129,6 +156,6 @@ fun TextArea(
                 fontFamily = FontFamily(Font(R.font.dotgothic16))
             )
         }
-
     }
+
 }

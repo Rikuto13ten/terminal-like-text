@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -47,11 +46,13 @@ fun IntTextField(
     colors: TextFieldColors = TextFieldDefaults.colors()
 ) {
 
-    var text by remember { mutableStateOf(value.toString()) }
-    val onTextChange: (String) -> Unit = { newText: String ->
-        text = newText
-        newText.toIntOrNull()?.let {
-            onValueChange(it)
+    val text by remember { mutableStateOf(value.toString()) }
+    val onTextChange: (String) -> Unit = {
+        if (it.length == 2 && text == "0") {
+            it.drop(1)
+        }
+        if (it.all { char -> char.isDigit() } || it.isEmpty()) {
+            onValueChange(it.ifEmpty { "0" }.toInt())
         }
     }
 
